@@ -3,11 +3,15 @@ RegRipperRunner
 
 ## Info ##
 
-RegRipperRunner is to replace the functionality of my RegExtract tool e.g. run plugin, run hive, run folder but using Harlan regripper, which means it has the same functionality and plugins without me having to write plugins. It also by proxy includes some of the plugin browser (pb.pl) and rr.pl functionality/ 
+RegRipperRunner is to replace the functionality of my RegExtract tool e.g. run plugin, run hive, run folder but using Harlan Carvey's regripper, which means it has the same functionality and plugins as regripper without me having to maintain all of the plugins nor navigate via the command line for the numerous plugins that are implemented for it. By its nature it includes some of the plugin browser (pb.pl) and rr.pl functionality.
 
 ## Features ##
 
-- 
+- Run single plugin
+- Run multiple plugins
+- Run against single hive
+- Run against all hives in a folder
+- Quickly modify the filter lists
 
 ## Third party ##
 
