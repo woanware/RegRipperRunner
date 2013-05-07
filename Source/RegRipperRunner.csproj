@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
@@ -51,6 +52,12 @@
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormNewFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNewFilter.Designer.cs">
+      <DependentUpon>FormNewFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="FormOptions.cs">
       <SubType>Form</SubType>
@@ -66,6 +73,9 @@
     <Compile Include="Settings.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNewFilter.resx">
+      <DependentUpon>FormNewFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>

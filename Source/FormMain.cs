@@ -226,14 +226,10 @@ namespace RegRipperRunner
             using (new HourGlass(this))
             {
                 cboFilter.Items.Clear();
-                foreach (string file in System.IO.Directory.EnumerateFiles(_regRipperPlugins, "*"))
+                List<string> filters = Functions.GetAllFilters(_regRipperPlugins);
+                foreach (string filter in filters)
                 {
-                    if (System.IO.Path.GetExtension(file) != string.Empty)
-                    {
-                        continue;
-                    }
-
-                    cboFilter.Items.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+                    cboFilter.Items.Add(filter);
                 }
 
                 if (cboFilter.Items.Count > 0)
@@ -537,8 +533,8 @@ namespace RegRipperRunner
                             }
                             catch (Exception ex)
                             {
-                                UserInterface.DisplayErrorMessageBox(this, "An error occurred: " + ex.Message);
-                                return; 
+                                //UserInterface.DisplayErrorMessageBox(this, "An error occurred: " + ex.Message);
+                                //return; 
                             }
                         }
                     };
@@ -718,6 +714,8 @@ namespace RegRipperRunner
                                         System.IO.Path.Combine(_regRipperPlugins,
                                                                cboFilter.Items[cboFilter.SelectedIndex].ToString()),
                                         false);
+
+            LoadFilterPlugins();
         }
 
         /// <summary>
@@ -727,11 +725,6 @@ namespace RegRipperRunner
         /// <param name="e"></param>
         private void contextFilterDelete_Click(object sender, EventArgs e)
         {
-            // Get the current plugins for filter
-            // Ensure that  already there
-            // remove from list
-            // output new file
-
             if (cboFilter.SelectedIndex == -1)
             {
                 UserInterface.DisplayMessageBox(this, "The filter must be selected", MessageBoxIcon.Exclamation);
@@ -741,7 +734,7 @@ namespace RegRipperRunner
             // Get the current plugins for filter
             List<string> plugins = Functions.GetFilterPlugins(_regRipperPlugins, cboFilter.Items[cboFilter.SelectedIndex].ToString());
 
-            // Check not already in list of plugins for filter else add to list
+            // Check plugin is in list of plugins for filter then remove
             foreach (Plugin plugin in listPlugins.SelectedObjects)
             {
                 var count = (from p in plugins where p.ToLower() == plugin.Name select p).Count();
@@ -750,9 +743,7 @@ namespace RegRipperRunner
                     continue;
                 }
 
-                plug
-
-                plugins.Add(plugin.Name);
+                plugins.Remove(plugin.Name);
             }
 
             plugins.Sort();
@@ -761,6 +752,36 @@ namespace RegRipperRunner
                                         System.IO.Path.Combine(_regRipperPlugins,
                                                                cboFilter.Items[cboFilter.SelectedIndex].ToString()),
                                         false);
+
+            LoadFilterPlugins();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextFilterNew_Click(object sender, EventArgs e)
+        {
+            List<string> plugins = new List<string>();
+            // Check plugin is in list of plugins for filter then remove
+            foreach (Plugin plugin in listPlugins.SelectedObjects)
+            {
+                plugins.Add(plugin.Name);
+            }
+
+            plugins.Sort();
+
+            using (FormNewFilter form = new FormNewFilter(_regRipperPlugins, plugins))
+            {
+                if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                LoadFilters();
+                UserInterface.LocateAndSelectComboBoxValue(form.Filter, cboFilter);
+            }
         }
 
         /// <summary>
@@ -773,5 +794,7 @@ namespace RegRipperRunner
             LoadFilters();
         }
         #endregion 
+
+        
     }
 }

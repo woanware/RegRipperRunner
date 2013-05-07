@@ -35,6 +35,12 @@
             this.olvcOs = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcShortDesc = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.context = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextFilter = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextFilterAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextFilterDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextFilterSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextFilterRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,19 +63,15 @@
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.RichTextBox();
-            this.context = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextFilterAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextFilterDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextFilterSep1 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextFilterRefresh = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextFilterSep2 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextFilterNew = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.listPlugins)).BeginInit();
+            this.context.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabPagePlugins.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
-            this.context.SuspendLayout();
             this.SuspendLayout();
             // 
             // listPlugins
@@ -136,6 +138,54 @@
             this.olvcShortDesc.CellPadding = null;
             this.olvcShortDesc.IsEditable = false;
             this.olvcShortDesc.Text = "Desc";
+            // 
+            // context
+            // 
+            this.context.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextFilter});
+            this.context.Name = "context";
+            this.context.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.context.Size = new System.Drawing.Size(153, 48);
+            this.context.Opening += new System.ComponentModel.CancelEventHandler(this.context_Opening);
+            // 
+            // contextFilter
+            // 
+            this.contextFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextFilterAdd,
+            this.contextFilterDelete,
+            this.contextFilterSep1,
+            this.contextFilterNew,
+            this.contextFilterSep2,
+            this.contextFilterRefresh});
+            this.contextFilter.Name = "contextFilter";
+            this.contextFilter.Size = new System.Drawing.Size(152, 22);
+            this.contextFilter.Text = "Filter";
+            // 
+            // contextFilterAdd
+            // 
+            this.contextFilterAdd.Name = "contextFilterAdd";
+            this.contextFilterAdd.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterAdd.Text = "Add";
+            this.contextFilterAdd.Click += new System.EventHandler(this.contextFilterAdd_Click);
+            // 
+            // contextFilterDelete
+            // 
+            this.contextFilterDelete.Name = "contextFilterDelete";
+            this.contextFilterDelete.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterDelete.Text = "Delete";
+            this.contextFilterDelete.Click += new System.EventHandler(this.contextFilterDelete_Click);
+            // 
+            // contextFilterSep1
+            // 
+            this.contextFilterSep1.Name = "contextFilterSep1";
+            this.contextFilterSep1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // contextFilterRefresh
+            // 
+            this.contextFilterRefresh.Name = "contextFilterRefresh";
+            this.contextFilterRefresh.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterRefresh.Text = "Refresh";
+            this.contextFilterRefresh.Click += new System.EventHandler(this.contextFilterRefresh_Click);
             // 
             // menuStrip
             // 
@@ -328,51 +378,17 @@
             this.txtOutput.TabIndex = 2;
             this.txtOutput.Text = "";
             // 
-            // context
+            // contextFilterSep2
             // 
-            this.context.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextFilter});
-            this.context.Name = "context";
-            this.context.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.context.Size = new System.Drawing.Size(101, 26);
-            this.context.Opening += new System.ComponentModel.CancelEventHandler(this.context_Opening);
+            this.contextFilterSep2.Name = "contextFilterSep2";
+            this.contextFilterSep2.Size = new System.Drawing.Size(149, 6);
             // 
-            // contextFilter
+            // contextFilterNew
             // 
-            this.contextFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextFilterAdd,
-            this.contextFilterDelete,
-            this.contextFilterSep1,
-            this.contextFilterRefresh});
-            this.contextFilter.Name = "contextFilter";
-            this.contextFilter.Size = new System.Drawing.Size(152, 22);
-            this.contextFilter.Text = "Filter";
-            // 
-            // contextFilterAdd
-            // 
-            this.contextFilterAdd.Name = "contextFilterAdd";
-            this.contextFilterAdd.Size = new System.Drawing.Size(152, 22);
-            this.contextFilterAdd.Text = "Add";
-            this.contextFilterAdd.Click += new System.EventHandler(this.contextFilterAdd_Click);
-            // 
-            // contextFilterDelete
-            // 
-            this.contextFilterDelete.Name = "contextFilterDelete";
-            this.contextFilterDelete.Size = new System.Drawing.Size(152, 22);
-            this.contextFilterDelete.Text = "Delete";
-            this.contextFilterDelete.Click += new System.EventHandler(this.contextFilterDelete_Click);
-            // 
-            // contextFilterSep1
-            // 
-            this.contextFilterSep1.Name = "contextFilterSep1";
-            this.contextFilterSep1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // contextFilterRefresh
-            // 
-            this.contextFilterRefresh.Name = "contextFilterRefresh";
-            this.contextFilterRefresh.Size = new System.Drawing.Size(152, 22);
-            this.contextFilterRefresh.Text = "Refresh";
-            this.contextFilterRefresh.Click += new System.EventHandler(this.contextFilterRefresh_Click);
+            this.contextFilterNew.Name = "contextFilterNew";
+            this.contextFilterNew.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterNew.Text = "New";
+            this.contextFilterNew.Click += new System.EventHandler(this.contextFilterNew_Click);
             // 
             // FormMain
             // 
@@ -391,6 +407,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.listPlugins)).EndInit();
+            this.context.ResumeLayout(false);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.toolStrip.ResumeLayout(false);
@@ -398,7 +415,6 @@
             this.tabMain.ResumeLayout(false);
             this.tabPagePlugins.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
-            this.context.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -440,6 +456,8 @@
         private System.Windows.Forms.ToolStripMenuItem contextFilterDelete;
         private System.Windows.Forms.ToolStripSeparator contextFilterSep1;
         private System.Windows.Forms.ToolStripMenuItem contextFilterRefresh;
+        private System.Windows.Forms.ToolStripMenuItem contextFilterNew;
+        private System.Windows.Forms.ToolStripSeparator contextFilterSep2;
     }
 }
 

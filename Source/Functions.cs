@@ -107,5 +107,25 @@ namespace RegRipperRunner
 
             return false;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllFilters(string pluginDir)
+        {
+            List<string> filters = new List<string>();
+            foreach (string file in System.IO.Directory.EnumerateFiles(pluginDir, "*"))
+            {
+                if (System.IO.Path.GetExtension(file) != string.Empty)
+                {
+                    continue;
+                }
+
+                filters.Add(System.IO.Path.GetFileNameWithoutExtension(file));
+            }
+
+            return filters;
+        }
     }
 }
