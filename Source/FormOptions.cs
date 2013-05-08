@@ -63,6 +63,12 @@ namespace RegRipperRunner
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             folderBrowserDialog.Description = "Select the folder containing the rip.exe file";
+
+            if (System.IO.Directory.Exists(txtRegRipperDir.Text) == true)
+            {
+                folderBrowserDialog.SelectedPath = txtRegRipperDir.Text;
+            }
+
             if (folderBrowserDialog.ShowDialog(this) == DialogResult.Cancel)
             {
                 return;

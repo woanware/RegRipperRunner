@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.listPlugins = new BrightIdeasSoftware.ObjectListView();
             this.olvcName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcHive = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -40,6 +41,8 @@
             this.contextFilterAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.contextFilterDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.contextFilterSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextFilterNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextFilterSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.contextFilterRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +54,7 @@
             this.menuToolsSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuToolsOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.lblMode = new System.Windows.Forms.ToolStripLabel();
@@ -63,8 +66,6 @@
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.RichTextBox();
-            this.contextFilterSep2 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextFilterNew = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.listPlugins)).BeginInit();
             this.context.SuspendLayout();
             this.menuStrip.SuspendLayout();
@@ -145,7 +146,7 @@
             this.contextFilter});
             this.context.Name = "context";
             this.context.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.context.Size = new System.Drawing.Size(153, 48);
+            this.context.Size = new System.Drawing.Size(101, 26);
             this.context.Opening += new System.ComponentModel.CancelEventHandler(this.context_Opening);
             // 
             // contextFilter
@@ -158,32 +159,44 @@
             this.contextFilterSep2,
             this.contextFilterRefresh});
             this.contextFilter.Name = "contextFilter";
-            this.contextFilter.Size = new System.Drawing.Size(152, 22);
+            this.contextFilter.Size = new System.Drawing.Size(100, 22);
             this.contextFilter.Text = "Filter";
             // 
             // contextFilterAdd
             // 
             this.contextFilterAdd.Name = "contextFilterAdd";
-            this.contextFilterAdd.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterAdd.Size = new System.Drawing.Size(113, 22);
             this.contextFilterAdd.Text = "Add";
             this.contextFilterAdd.Click += new System.EventHandler(this.contextFilterAdd_Click);
             // 
             // contextFilterDelete
             // 
             this.contextFilterDelete.Name = "contextFilterDelete";
-            this.contextFilterDelete.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterDelete.Size = new System.Drawing.Size(113, 22);
             this.contextFilterDelete.Text = "Delete";
             this.contextFilterDelete.Click += new System.EventHandler(this.contextFilterDelete_Click);
             // 
             // contextFilterSep1
             // 
             this.contextFilterSep1.Name = "contextFilterSep1";
-            this.contextFilterSep1.Size = new System.Drawing.Size(149, 6);
+            this.contextFilterSep1.Size = new System.Drawing.Size(110, 6);
+            // 
+            // contextFilterNew
+            // 
+            this.contextFilterNew.Name = "contextFilterNew";
+            this.contextFilterNew.Size = new System.Drawing.Size(113, 22);
+            this.contextFilterNew.Text = "New";
+            this.contextFilterNew.Click += new System.EventHandler(this.contextFilterNew_Click);
+            // 
+            // contextFilterSep2
+            // 
+            this.contextFilterSep2.Name = "contextFilterSep2";
+            this.contextFilterSep2.Size = new System.Drawing.Size(110, 6);
             // 
             // contextFilterRefresh
             // 
             this.contextFilterRefresh.Name = "contextFilterRefresh";
-            this.contextFilterRefresh.Size = new System.Drawing.Size(152, 22);
+            this.contextFilterRefresh.Size = new System.Drawing.Size(113, 22);
             this.contextFilterRefresh.Text = "Refresh";
             this.contextFilterRefresh.Click += new System.EventHandler(this.contextFilterRefresh_Click);
             // 
@@ -263,16 +276,17 @@
             // menuHelp
             // 
             this.menuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
+            this.menuHelpAbout});
             this.menuHelp.Name = "menuHelp";
             this.menuHelp.Size = new System.Drawing.Size(44, 20);
             this.menuHelp.Text = "&Help";
             // 
-            // aboutToolStripMenuItem
+            // menuHelpAbout
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.aboutToolStripMenuItem.Text = "&About";
+            this.menuHelpAbout.Name = "menuHelpAbout";
+            this.menuHelpAbout.Size = new System.Drawing.Size(152, 22);
+            this.menuHelpAbout.Text = "&About";
+            this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
             // 
             // statusStrip
             // 
@@ -378,18 +392,6 @@
             this.txtOutput.TabIndex = 2;
             this.txtOutput.Text = "";
             // 
-            // contextFilterSep2
-            // 
-            this.contextFilterSep2.Name = "contextFilterSep2";
-            this.contextFilterSep2.Size = new System.Drawing.Size(149, 6);
-            // 
-            // contextFilterNew
-            // 
-            this.contextFilterNew.Name = "contextFilterNew";
-            this.contextFilterNew.Size = new System.Drawing.Size(152, 22);
-            this.contextFilterNew.Text = "New";
-            this.contextFilterNew.Click += new System.EventHandler(this.contextFilterNew_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -400,6 +402,7 @@
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -440,7 +443,7 @@
         private System.Windows.Forms.TabPage tabPagePlugins;
         private System.Windows.Forms.TabPage tabPageOutput;
         private System.Windows.Forms.RichTextBox txtOutput;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuHelpAbout;
         private System.Windows.Forms.ToolStripMenuItem menuToolsRunPlugin;
         private System.Windows.Forms.ToolStripMenuItem menuToolsRunHive;
         private System.Windows.Forms.ToolStripMenuItem menuToolsRunFolder;

@@ -484,17 +484,18 @@ namespace RegRipperRunner
                 return;
             }
 
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.SelectedPath =
-                @"M:\Projects\Libraries\RegistryParser.v2\Documents\Example Registry Files\woany8";
-                
-            folderBrowserDialog.Description = "Select the folder containing the registry hives";
-            if (folderBrowserDialog.ShowDialog(this) == DialogResult.Cancel)
+            string folder = string.Empty;
+            using (FormFolder form = new FormFolder())
             {
-                return;
+                if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                folder = form.Folder;
             }
 
-            txtOutput.Text = string.Empty ;
+            txtOutput.Text = string.Empty;
 
             Task.Factory.StartNew(() =>
             {
@@ -506,7 +507,7 @@ namespace RegRipperRunner
 
                         List<Plugin> tempPlugins = listPlugins.Objects.Cast<Plugin>().ToList();
 
-                        foreach (string file in System.IO.Directory.EnumerateFiles(folderBrowserDialog.SelectedPath, "*"))
+                        foreach (string file in System.IO.Directory.EnumerateFiles(folder, "*"))
                         {
                             try
                             {
@@ -604,6 +605,19 @@ namespace RegRipperRunner
         private void menuFileExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuHelpAbout_Click(object sender, EventArgs e)
+        {
+            using (FormAbout form = new FormAbout())
+            {
+                form.ShowDialog(this);
+            }
         }
 
         /// <summary>
@@ -794,7 +808,5 @@ namespace RegRipperRunner
             LoadFilters();
         }
         #endregion 
-
-        
     }
 }
