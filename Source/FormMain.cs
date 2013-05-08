@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NLog;
+using NLog.Config;
+using NLog.Targets;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +22,7 @@ namespace RegRipperRunner
         private string _regRipper;
         private string _regRipperPlugins;
         private Global.Mode _mode = Global.Mode.Single;
+        private Logger _logger = LogManager.GetCurrentClassLogger();
         #endregion
 
         #region Constructor
@@ -39,6 +43,8 @@ namespace RegRipperRunner
                 ((Plugin)rowObject).Active = newValue;
                 return newValue; 
             };
+
+            SetupLogger();
         }
         #endregion
 
@@ -107,6 +113,25 @@ namespace RegRipperRunner
         /// <summary>
         /// 
         /// </summary>
+        private void SetupLogger()
+        {
+            LoggingConfiguration config = new LoggingConfiguration();
+
+            FileTarget fileTarget = new FileTarget();
+            fileTarget.Layout = @"${date:format=yyyyMMddHHmmss} ${message}";
+            fileTarget.FileName = System.IO.Path.Combine(Misc.GetUserDataDirectory(), @"Log.txt");
+
+            config.AddTarget("file", fileTarget);
+
+            LoggingRule rule = new LoggingRule("*", LogLevel.Debug, fileTarget);
+            config.LoggingRules.Add(rule);
+
+            LogManager.Configuration = config;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private void UpdatePaths()
         {
             _regRipper = System.IO.Path.Combine(_settings.RegRipperDir, Global.REGRIPPER_EXE);
@@ -125,90 +150,28 @@ namespace RegRipperRunner
 
             Task.Factory.StartNew(() =>
             {
-                MethodInvoker methodInvoker = delegate
+                using (new HourGlass(this))
                 {
-                    using (new HourGlass(this))
+                    List<Plugin> plugins = Functions.LoadPlugins(_regRipperPlugins);
+                    listPlugins.SetObjects(plugins);
+
+                    MethodInvoker methodInvoker = delegate
                     {
-                        List<Tuple<string, Regex>> regexes = new List<Tuple<string, Regex>>();
-                        regexes.Add(new Tuple<string, Regex>("hive", new Regex(@"my %config\s+=\s+\(hive\s+=>\s+""(.*)"",", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("hasshortdesc", new Regex(@"\s+hasShortDescr\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("hasdesc", new Regex(@"\s+hasDescr\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("refs", new Regex(@"\s+hasRefs\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("os", new Regex(@"\s+osmask\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("version", new Regex(@"\s+version\s+=>\s+(.*)\)", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-                        regexes.Add(new Tuple<string, Regex>("shortdesc", new Regex(@"sub getShortDescr {\s*return ""(.*)"";\s*}", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
-
-                        List<Plugin> plugins = new List<Plugin>();
-                        foreach (string file in System.IO.Directory.EnumerateFiles(_regRipperPlugins, "*.pl"))
-                        {
-                            string perl = File.ReadAllText(file);
-
-                            Plugin plugin = new Plugin();
-                            plugin.Active = true;
-                            plugin.Name = System.IO.Path.GetFileNameWithoutExtension(file);
-                            plugin.File = System.IO.Path.GetFileName(file);
-                            foreach (Tuple<string, Regex> regex in regexes)
-                            {
-                                Match match = regex.Item2.Match(perl);
-                                if (match.Success == true)
-                                {
-                                    switch (regex.Item1)
-                                    {
-                                        case "hive":
-                                            plugin.Hive = match.Groups[1].Value.Replace(@"\.", ".");
-                                            break;
-                                        case "hasshortdesc":
-                                            plugin.HasShortDesc = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
-                                            break;
-                                        case "shortdesc":
-                                            plugin.ShortDesc = match.Groups[1].Value;
-                                            break;
-                                        case "hasdesc":
-                                            plugin.HasDesc = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
-                                            break;
-                                        case "refs":
-                                            plugin.HasRefs = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
-                                            break;
-                                        case "os":
-                                            int osMask = 0;
-                                            if (int.TryParse(match.Groups[1].Value, out osMask) == true)
-                                            {
-                                                plugin.OsMask = osMask;
-                                                plugin.UpdateOs();
-                                            }
-                                            break;
-                                        case "version":
-                                            plugin.Version = match.Groups[1].Value;
-                                            break;
-
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("FAIL: " + file);
-                                }
-                            }
-
-                            plugins.Add(plugin);
-                        }
-
-                        listPlugins.SetObjects(plugins);
-
                         olvcHive.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                         olvcName.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                         olvcOs.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                         olvcShortDesc.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                         olvcVersion.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-                    }
-                };
+                    };
 
-                if (this.InvokeRequired == true)
-                {
-                    this.BeginInvoke(methodInvoker);
-                }
-                else
-                {
-                    methodInvoker.Invoke();
+                    if (this.InvokeRequired == true)
+                    {
+                        this.BeginInvoke(methodInvoker);
+                    }
+                    else
+                    {
+                        methodInvoker.Invoke();
+                    }
                 }
             });
         }
@@ -254,33 +217,48 @@ namespace RegRipperRunner
                 return;
             }
 
-            using (new HourGlass(this))
+            Task.Factory.StartNew(() =>
             {
-                if (listPlugins.Items.Count == 0)
+                using (new HourGlass(this))
                 {
-                    return;
-                }
-
-                string filterName = cboFilter.Items[cboFilter.SelectedIndex].ToString();
-                List<string> plugins = Functions.GetFilterPlugins(_regRipperPlugins, filterName);
-
-                foreach (Plugin plugin in listPlugins.Objects)
-                {
-                    plugin.Active = false;
-                    listPlugins.RefreshObject(plugin);
-                }
-
-                foreach (Plugin plugin in listPlugins.Objects)
-                {
-                    var temp = (from p in plugins where p.ToLower() == plugin.Name select p).Count();
-                    if (temp> 0)
+                    MethodInvoker methodInvoker = delegate
                     {
-                        plugin.Active = true;
-                    }
+                        if (listPlugins.Items.Count == 0)
+                        {
+                            return;
+                        }
 
-                    listPlugins.RefreshObject(plugin);
+                        string filterName = cboFilter.Items[cboFilter.SelectedIndex].ToString();
+                        List<string> plugins = Functions.GetFilterPlugins(_regRipperPlugins, filterName);
+
+                        foreach (Plugin plugin in listPlugins.Objects)
+                        {
+                            plugin.Active = false;
+                            listPlugins.RefreshObject(plugin);
+                        }
+
+                        foreach (Plugin plugin in listPlugins.Objects)
+                        {
+                            var temp = (from p in plugins where p.ToLower() == plugin.Name select p).Count();
+                            if (temp > 0)
+                            {
+                                plugin.Active = true;
+                            }
+
+                            listPlugins.RefreshObject(plugin);
+                        }
+                    };
+
+                    if (this.InvokeRequired == true)
+                    {
+                        this.BeginInvoke(methodInvoker);
+                    }
+                    else
+                    {
+                        methodInvoker.Invoke();
+                    }
                 }
-            }
+            });
         }
         #endregion
 
@@ -329,8 +307,10 @@ namespace RegRipperRunner
                 return;
             }
 
+            Plugin plugin = (Plugin)listPlugins.SelectedObject;
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Select the " + listPlugins.SelectedItems[0].SubItems[1].Text + " registry hive";
+            openFileDialog.Title = "Select the " + plugin.Hive + " registry hive";
             openFileDialog.Filter = "All Files|*.*";
             if (openFileDialog.ShowDialog(this) == DialogResult.Cancel)
             {
@@ -343,11 +323,8 @@ namespace RegRipperRunner
                 {
                     MethodInvoker methodInvoker = delegate
                     {
-                        Plugin plugin = (Plugin)listPlugins.SelectedObject;
-
-                        string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + openFileDialog.FileName + "\" -p \"" + plugin.Name + "\"");
-                        txtOutput.Text = ret;
                         tabMain.SelectedTab = tabPageOutput;
+                        ExecutePlugin(openFileDialog.FileName, plugin.Name, false);
                     };
 
                     if (this.InvokeRequired == true)
@@ -416,6 +393,7 @@ namespace RegRipperRunner
                             Registry.Registry registry = new Registry.Registry(openFileDialog.FileName);
                             if (registry.HiveType == Registry.HiveType.Unknown)
                             {
+                                _logger.Error("Unknown hive type: " + openFileDialog.FileName);
                                 UserInterface.DisplayErrorMessageBox(this, "Unable to determined registry hive type");
                                 return;
                             }
@@ -424,11 +402,7 @@ namespace RegRipperRunner
 
                             foreach (string plugin in plugins)
                             {
-                                string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + openFileDialog.FileName + "\" -p \"" + plugin + "\"");
-                                txtOutput.AppendText(ret);
-                                txtOutput.AppendText(Environment.NewLine);
-                                txtOutput.AppendText("--------------------------------------------");
-                                txtOutput.AppendText(Environment.NewLine);
+                                ExecutePlugin(openFileDialog.FileName, plugin, true);
                             }
                         }
                         catch (Exception ex)
@@ -514,6 +488,7 @@ namespace RegRipperRunner
                                 Registry.Registry registry = new Registry.Registry(file);
                                 if (registry.HiveType == Registry.HiveType.Unknown)
                                 {
+                                    _logger.Error("Unknown hive type: " + file);
                                     continue;
                                 }
 
@@ -525,17 +500,12 @@ namespace RegRipperRunner
                                         continue;
                                     }
 
-                                    string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + file + "\" -p \"" + plugin + "\"");
-                                    txtOutput.AppendText(ret);
-                                    txtOutput.AppendText(Environment.NewLine);
-                                    txtOutput.AppendText("--------------------------------------------");
-                                    txtOutput.AppendText(Environment.NewLine);
+                                    ExecutePlugin(file, plugin, true);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                //UserInterface.DisplayErrorMessageBox(this, "An error occurred: " + ex.Message);
-                                //return; 
+                                _logger.Error("Error occurred whilst running plugin: (" + file + ") " + ex.Message);
                             }
                         }
                     };
@@ -550,7 +520,32 @@ namespace RegRipperRunner
                     }
                 }
             });
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="plugin"></param>
+        /// <param name="outputSeparators"></param>
+        private void ExecutePlugin(string file, string plugin, bool outputSeparators)
+        {
+            try
+            {
+                string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + file + "\" -p \"" + plugin + "\"");
+                txtOutput.AppendText(ret);
+
+                if (outputSeparators == true)
+                {
+                    txtOutput.AppendText(Environment.NewLine);
+                    txtOutput.AppendText("--------------------------------------------");
+                    txtOutput.AppendText(Environment.NewLine);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error occurred whilst running plugin: (Plugin:" + plugin + "|File:" + file + ") " + ex.Message);
+            }
         }
         #endregion
 
@@ -568,9 +563,10 @@ namespace RegRipperRunner
 
                     _mode = Global.Mode.All;
 
-                    for (int index = 0; index < listPlugins.Items.Count; index++)
+                    foreach (Plugin plugin in listPlugins.Objects)
                     {
-                        listPlugins.Items[index].Checked = true;
+                        plugin.Active = true;
+                        listPlugins.RefreshObject(plugin);
                     }
                     break;
                 case "filter":
@@ -618,6 +614,16 @@ namespace RegRipperRunner
             {
                 form.ShowDialog(this);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuHelpHelp_Click(object sender, EventArgs e)
+        {
+            Misc.ShellExecuteFile(System.IO.Path.Combine(Misc.GetApplicationDirectory(), "Help.pdf"));
         }
 
         /// <summary>
@@ -691,6 +697,15 @@ namespace RegRipperRunner
             else
             {
                 contextFilter.Enabled = false;
+            }
+
+            if (listPlugins.SelectedObjects.Count == 1)
+            {
+                contextPlugin.Enabled = true;
+            }
+            else
+            {
+                contextPlugin.Enabled = false;
             }
         }
 
@@ -806,6 +821,26 @@ namespace RegRipperRunner
         private void contextFilterRefresh_Click(object sender, EventArgs e)
         {
             LoadFilters();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextPlugin_Click(object sender, EventArgs e)
+        {
+            if (listPlugins.SelectedObjects.Count != 1)
+            {
+                return;
+            }
+
+            Plugin plugin = (Plugin)listPlugins.SelectedObject;
+
+            using (FormPlugin form = new FormPlugin(_regRipperPlugins, plugin.File))
+            {
+                form.ShowDialog(this);
+            }
         }
         #endregion 
     }

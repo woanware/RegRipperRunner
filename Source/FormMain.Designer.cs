@@ -54,6 +54,8 @@
             this.menuToolsSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuToolsOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuHelpHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
@@ -66,6 +68,8 @@
             this.tabPagePlugins = new System.Windows.Forms.TabPage();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.RichTextBox();
+            this.contextSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextPlugin = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.listPlugins)).BeginInit();
             this.context.SuspendLayout();
             this.menuStrip.SuspendLayout();
@@ -143,10 +147,12 @@
             // context
             // 
             this.context.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextFilter});
+            this.contextFilter,
+            this.contextSep1,
+            this.contextPlugin});
             this.context.Name = "context";
             this.context.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.context.Size = new System.Drawing.Size(101, 26);
+            this.context.Size = new System.Drawing.Size(153, 76);
             this.context.Opening += new System.ComponentModel.CancelEventHandler(this.context_Opening);
             // 
             // contextFilter
@@ -159,44 +165,44 @@
             this.contextFilterSep2,
             this.contextFilterRefresh});
             this.contextFilter.Name = "contextFilter";
-            this.contextFilter.Size = new System.Drawing.Size(100, 22);
+            this.contextFilter.Size = new System.Drawing.Size(152, 22);
             this.contextFilter.Text = "Filter";
             // 
             // contextFilterAdd
             // 
             this.contextFilterAdd.Name = "contextFilterAdd";
-            this.contextFilterAdd.Size = new System.Drawing.Size(113, 22);
+            this.contextFilterAdd.Size = new System.Drawing.Size(152, 22);
             this.contextFilterAdd.Text = "Add";
             this.contextFilterAdd.Click += new System.EventHandler(this.contextFilterAdd_Click);
             // 
             // contextFilterDelete
             // 
             this.contextFilterDelete.Name = "contextFilterDelete";
-            this.contextFilterDelete.Size = new System.Drawing.Size(113, 22);
+            this.contextFilterDelete.Size = new System.Drawing.Size(152, 22);
             this.contextFilterDelete.Text = "Delete";
             this.contextFilterDelete.Click += new System.EventHandler(this.contextFilterDelete_Click);
             // 
             // contextFilterSep1
             // 
             this.contextFilterSep1.Name = "contextFilterSep1";
-            this.contextFilterSep1.Size = new System.Drawing.Size(110, 6);
+            this.contextFilterSep1.Size = new System.Drawing.Size(149, 6);
             // 
             // contextFilterNew
             // 
             this.contextFilterNew.Name = "contextFilterNew";
-            this.contextFilterNew.Size = new System.Drawing.Size(113, 22);
+            this.contextFilterNew.Size = new System.Drawing.Size(152, 22);
             this.contextFilterNew.Text = "New";
             this.contextFilterNew.Click += new System.EventHandler(this.contextFilterNew_Click);
             // 
             // contextFilterSep2
             // 
             this.contextFilterSep2.Name = "contextFilterSep2";
-            this.contextFilterSep2.Size = new System.Drawing.Size(110, 6);
+            this.contextFilterSep2.Size = new System.Drawing.Size(149, 6);
             // 
             // contextFilterRefresh
             // 
             this.contextFilterRefresh.Name = "contextFilterRefresh";
-            this.contextFilterRefresh.Size = new System.Drawing.Size(113, 22);
+            this.contextFilterRefresh.Size = new System.Drawing.Size(152, 22);
             this.contextFilterRefresh.Text = "Refresh";
             this.contextFilterRefresh.Click += new System.EventHandler(this.contextFilterRefresh_Click);
             // 
@@ -276,15 +282,29 @@
             // menuHelp
             // 
             this.menuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuHelpHelp,
+            this.toolStripMenuItem1,
             this.menuHelpAbout});
             this.menuHelp.Name = "menuHelp";
             this.menuHelp.Size = new System.Drawing.Size(44, 20);
             this.menuHelp.Text = "&Help";
             // 
+            // menuHelpHelp
+            // 
+            this.menuHelpHelp.Name = "menuHelpHelp";
+            this.menuHelpHelp.Size = new System.Drawing.Size(107, 22);
+            this.menuHelpHelp.Text = "Help";
+            this.menuHelpHelp.Click += new System.EventHandler(this.menuHelpHelp_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(104, 6);
+            // 
             // menuHelpAbout
             // 
             this.menuHelpAbout.Name = "menuHelpAbout";
-            this.menuHelpAbout.Size = new System.Drawing.Size(152, 22);
+            this.menuHelpAbout.Size = new System.Drawing.Size(107, 22);
             this.menuHelpAbout.Text = "&About";
             this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
             // 
@@ -392,6 +412,18 @@
             this.txtOutput.TabIndex = 2;
             this.txtOutput.Text = "";
             // 
+            // contextSep1
+            // 
+            this.contextSep1.Name = "contextSep1";
+            this.contextSep1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // contextPlugin
+            // 
+            this.contextPlugin.Name = "contextPlugin";
+            this.contextPlugin.Size = new System.Drawing.Size(152, 22);
+            this.contextPlugin.Text = "Plugin";
+            this.contextPlugin.Click += new System.EventHandler(this.contextPlugin_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -461,6 +493,10 @@
         private System.Windows.Forms.ToolStripMenuItem contextFilterRefresh;
         private System.Windows.Forms.ToolStripMenuItem contextFilterNew;
         private System.Windows.Forms.ToolStripSeparator contextFilterSep2;
+        private System.Windows.Forms.ToolStripMenuItem menuHelpHelp;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator contextSep1;
+        private System.Windows.Forms.ToolStripMenuItem contextPlugin;
     }
 }
 

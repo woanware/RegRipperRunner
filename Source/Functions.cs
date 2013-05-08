@@ -3,6 +3,10 @@ using System.IO;
 using System.Linq;
 using BrightIdeasSoftware;
 using woanware;
+using System;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using NLog;
 
 namespace RegRipperRunner
 {
@@ -11,6 +15,80 @@ namespace RegRipperRunner
     /// </summary>
     public static class Functions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pluginDir"></param>
+        /// <returns></returns>
+        public static List<Plugin> LoadPlugins(string pluginDir)
+        {
+            List<Tuple<string, Regex>> regexes = new List<Tuple<string, Regex>>();
+            regexes.Add(new Tuple<string, Regex>("hive", new Regex(@"my %config\s+=\s+\(hive\s+=>\s+""(.*)"",", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("hasshortdesc", new Regex(@"\s+hasShortDescr\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("hasdesc", new Regex(@"\s+hasDescr\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("refs", new Regex(@"\s+hasRefs\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("os", new Regex(@"\s+osmask\s+=>\s+(.*),", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("version", new Regex(@"\s+version\s+=>\s+(.*)\)", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+            regexes.Add(new Tuple<string, Regex>("shortdesc", new Regex(@"sub getShortDescr {\s*return ""(.*)"";\s*}", RegexOptions.IgnoreCase | RegexOptions.Compiled)));
+
+            List<Plugin> plugins = new List<Plugin>();
+            foreach (string file in System.IO.Directory.EnumerateFiles(pluginDir, "*.pl"))
+            {
+                string perl = File.ReadAllText(file);
+
+                Plugin plugin = new Plugin();
+                plugin.Active = true;
+                plugin.Name = System.IO.Path.GetFileNameWithoutExtension(file);
+                plugin.File = System.IO.Path.GetFileName(file);
+                foreach (Tuple<string, Regex> regex in regexes)
+                {
+                    Match match = regex.Item2.Match(perl);
+                    if (match.Success == true)
+                    {
+                        switch (regex.Item1)
+                        {
+                            case "hive":
+                                plugin.Hive = match.Groups[1].Value.Replace(@"\.", ".");
+                                break;
+                            case "hasshortdesc":
+                                plugin.HasShortDesc = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
+                                break;
+                            case "shortdesc":
+                                plugin.ShortDesc = match.Groups[1].Value;
+                                break;
+                            case "hasdesc":
+                                plugin.HasDesc = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
+                                break;
+                            case "refs":
+                                plugin.HasRefs = Convert.ToBoolean(Convert.ToInt16(match.Groups[1].Value));
+                                break;
+                            case "os":
+                                int osMask = 0;
+                                if (int.TryParse(match.Groups[1].Value, out osMask) == true)
+                                {
+                                    plugin.OsMask = osMask;
+                                    plugin.UpdateOs();
+                                }
+                                break;
+                            case "version":
+                                plugin.Version = match.Groups[1].Value;
+                                break;
+
+                        }
+                    }
+                    else
+                    {
+                        Logger _logger = LogManager.GetCurrentClassLogger();
+                        _logger.Error("Could not parse the plugin: " + file + " (" + regex.Item1 + ")");
+                    }
+                }
+
+                plugins.Add(plugin);
+            }
+
+            return plugins;
+        }
+
         /// <summary>
         /// 
         /// </summary>

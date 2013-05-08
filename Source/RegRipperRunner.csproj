@@ -34,7 +34,13 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\Dependencies\NLog\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="ObjectListView">
       <HintPath>..\Dependencies\ObjectListView\ObjectListView.dll</HintPath>
     </Reference>
@@ -84,6 +90,12 @@
     <Compile Include="FormOptions.Designer.cs">
       <DependentUpon>FormOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPlugin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPlugin.Designer.cs">
+      <DependentUpon>FormPlugin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Functions.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Plugin.cs" />
@@ -104,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptions.resx">
       <DependentUpon>FormOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPlugin.resx">
+      <DependentUpon>FormPlugin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
