@@ -24,6 +24,25 @@ namespace RegRipperRunner
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void btnBrowse_Click(object sender, System.EventArgs e)
+        {
+            FolderBrowserDialog folderBrowseDialog = new FolderBrowserDialog();
+            folderBrowseDialog.ShowNewFolderButton = true;
+            folderBrowseDialog.Description = "Select the folder containing the hives";
+
+            if (folderBrowseDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+            {
+                return;
+            }
+
+            txtFolder.Text = folderBrowseDialog.SelectedPath;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOk_Click(object sender, System.EventArgs e)
         {
             if (txtFolder.Text.Trim().Length == 0)

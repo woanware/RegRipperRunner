@@ -324,6 +324,7 @@ namespace RegRipperRunner
                     MethodInvoker methodInvoker = delegate
                     {
                         tabMain.SelectedTab = tabPageOutput;
+                        txtOutput.Text = string.Empty;
                         ExecutePlugin(openFileDialog.FileName, plugin.Name, false);
                     };
 
