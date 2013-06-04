@@ -11,11 +11,12 @@ RegRipperRunner is to replace the functionality of my RegExtract tool e.g. run p
 - Run multiple plugins
 - Run against single hive
 - Run against all hives in a folder
-- Auto rip e.g. Corey Harrell’s auto_rip concept http://journeyintoir.blogspot.co.uk/2013/05/unleashing-autorip.html
+- Auto rip e.g. Corey Harrell’s concept
 - Quickly modify the filter lists
 
 ## Third party ##
 
+- [Auto_rip](http://journeyintoir.blogspot.co.uk/2013/05/unleashing-autorip.html): Corey Harrell’s auto_rip concept
 - [NLog](http://github.com/NLog/NLog) : Logging
 - [ObjectListView](http://objectlistview.sourceforge.net/cs/index.html) : Data viewing via lists 
 - [Registry](https://github.com/woanware/Registry): Binary registry hive parser (woanware)
