@@ -548,6 +548,84 @@ namespace RegRipperRunner
                 _logger.Error("Error occurred whilst running plugin: (Plugin:" + plugin + "|File:" + file + ") " + ex.Message);
             }
         }
+
+        /// <summary>
+        /// Used to output autorip
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="plugin"></param>
+        private void ExecutePlugin(string inputFile, 
+                                   string outputFile, 
+                                   string plugin)
+        {
+            try
+            {
+                string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + inputFile + "\" -p \"" + plugin + "\"");
+                woanware.IO.WriteTextToFile("File: " + inputFile + Environment.NewLine + Environment.NewLine, outputFile, true);
+                woanware.IO.WriteTextToFile(ret, outputFile, true);
+                woanware.IO.WriteTextToFile(Environment.NewLine + "--------------------------------------------" + Environment.NewLine, outputFile, true);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error occurred whilst running plugin: (Plugin:" + plugin + "|File:" + inputFile + ") " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categories"></param>
+        /// <param name="inputDir"></param>
+        /// <param name="outputDir"></param>
+        private void RunAutoRip(List<string> categories,
+                                string inputDir,
+                                string outputDir)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                using (new HourGlass(this))
+                {
+                    string[] lines = File.ReadAllLines("autorip.dat");
+                    
+                    foreach (string file in System.IO.Directory.EnumerateFiles(inputDir, "*"))
+                    {
+                        try
+                        {
+                            Registry.Registry registry = new Registry.Registry(file);
+                            if (registry.HiveType == Registry.HiveType.Unknown)
+                            {
+                                continue;
+                            }
+
+                            foreach (string line in lines)
+                            {
+                                string[] parts = line.Split(',');
+                                if (parts.Length != 3)
+                                {
+                                    continue;
+                                }
+
+                                if (registry.HiveType.GetEnumDescription().ToLower() != parts[1].ToLower())
+                                {
+                                    continue;
+                                }
+
+                                UpdateStatusBar("Running " + parts[2] + "...");
+                                ExecutePlugin(file, System.IO.Path.Combine(outputDir, parts[0] + ".txt"), parts[2]);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error("Error occurred whilst running plugin: (" + file + ") " + ex.Message);
+                        }
+                    }
+
+                    UpdateStatusBar(string.Empty);
+                    UserInterface.DisplayMessageBox(this, "Autorip complete", MessageBoxIcon.Information);
+                }
+            });
+        }
         #endregion
 
         /// <summary>
@@ -680,6 +758,24 @@ namespace RegRipperRunner
         private void menuToolsRunFolder_Click(object sender, EventArgs e)
         {
             RunFolder();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuToolsAutoRip_Click(object sender, EventArgs e)
+        {
+            using (FormAutoRip form = new FormAutoRip())
+            {
+                if (form.ShowDialog(this) == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                RunAutoRip(form.Categories, form.InputDir, form.OutputDir);
+            }
         }
         #endregion
 
@@ -844,5 +940,28 @@ namespace RegRipperRunner
             }
         }
         #endregion 
+
+        #region User Interface Methods
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        private void UpdateStatusBar(string message)
+        {
+            MethodInvoker methodInvoker = delegate
+            {
+                statusLabel.Text = message;
+            };
+
+            if (this.InvokeRequired == true)
+            {
+                this.BeginInvoke(methodInvoker);
+            }
+            else
+            {
+                methodInvoker.Invoke();
+            }
+        }
+        #endregion
     }
 }

@@ -66,6 +66,12 @@
     <Compile Include="FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormAutoRip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAutoRip.Designer.cs">
+      <DependentUpon>FormAutoRip.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormFolder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,6 +111,9 @@
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormAutoRip.resx">
+      <DependentUpon>FormAutoRip.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormFolder.resx">
       <DependentUpon>FormFolder.cs</DependentUpon>
     </EmbeddedResource>
@@ -140,6 +149,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="autorip.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
