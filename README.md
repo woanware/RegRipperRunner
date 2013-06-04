@@ -11,6 +11,7 @@ RegRipperRunner is to replace the functionality of my RegExtract tool e.g. run p
 - Run multiple plugins
 - Run against single hive
 - Run against all hives in a folder
+- Auto rip e.g. Corey Harrell’s auto_rip concept http://journeyintoir.blogspot.co.uk/2013/05/unleashing-autorip.html
 - Quickly modify the filter lists
 
 ## Third party ##
