@@ -482,7 +482,7 @@ namespace RegRipperRunner
 
                         List<Plugin> tempPlugins = listPlugins.Objects.Cast<Plugin>().ToList();
 
-                        foreach (string file in System.IO.Directory.EnumerateFiles(folder, "*"))
+                        foreach (string file in System.IO.Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
                         {
                             try
                             {
@@ -534,6 +534,7 @@ namespace RegRipperRunner
             try
             {
                 string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + file + "\" -p \"" + plugin + "\"");
+                txtOutput.AppendText("File: " + file + Environment.NewLine + Environment.NewLine);
                 txtOutput.AppendText(ret);
 
                 if (outputSeparators == true)
@@ -588,7 +589,7 @@ namespace RegRipperRunner
                 {
                     string[] lines = File.ReadAllLines("autorip.dat");
                     
-                    foreach (string file in System.IO.Directory.EnumerateFiles(inputDir, "*"))
+                    foreach (string file in System.IO.Directory.EnumerateFiles(inputDir, "*", SearchOption.AllDirectories))
                     {
                         try
                         {
