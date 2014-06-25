@@ -533,7 +533,7 @@ namespace RegRipperRunner
         {
             try
             {
-                string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + file + "\" -p \"" + plugin + "\"");
+                string ret = Misc.ShellProcessWithOutput(_regRipper, _settings.RegRipperDir, "-r \"" + file + "\" -p \"" + plugin + "\"");
                 txtOutput.AppendText("File: " + file + Environment.NewLine + Environment.NewLine);
                 txtOutput.AppendText(ret);
 
@@ -562,7 +562,7 @@ namespace RegRipperRunner
         {
             try
             {
-                string ret = Misc.ShellProcessWithOutput(_regRipper, "-r \"" + inputFile + "\" -p \"" + plugin + "\"");
+                string ret = Misc.ShellProcessWithOutput(_regRipper, _settings.RegRipperDir, "-r \"" + inputFile + "\" -p \"" + plugin + "\"");
                 woanware.IO.WriteTextToFile("File: " + inputFile + Environment.NewLine + Environment.NewLine, outputFile, true);
                 woanware.IO.WriteTextToFile(ret, outputFile, true);
                 woanware.IO.WriteTextToFile(Environment.NewLine + "--------------------------------------------" + Environment.NewLine, outputFile, true);
